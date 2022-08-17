@@ -1,6 +1,7 @@
 {
     "/dist/js/background.js": "/dist/js/background.js",
     "/dist/js/popup.js": "/dist/js/popup.js",
+    "/dist/js/dashboard.js": "/dist/js/dashboard.js",
     "/dist/css/popup.css": "/dist/css/popup.css",
     "/dist/images/icon-128x128.png": "/dist/images/icon-128x128.png",
     "/dist/images/icon-16x16.png": "/dist/images/icon-16x16.png",
