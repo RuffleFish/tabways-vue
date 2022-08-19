@@ -29,11 +29,7 @@
     "tabs",
     "activeTab",
     "bookmarks",
-    "storage",
-    "webRequest",
-    "webRequestBlocking",
-    "http://*/",
-    "https://*/"
+    "storage"
   ],
   //can remove this - https://stackoverflow.com/questions/9106519/port-error-could-not-establish-connection-receiving-end-does-not-exist-in-chr
   "externally_connectable": {

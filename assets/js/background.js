@@ -1,57 +1,101 @@
-// when the extension is first installed, set default values
-chrome.runtime.onInstalled.addListener(function() {
-    chrome.storage.sync.set({
-        toggleSitesActive: false,
-        toggleSitesList: 'example.com'
-    }, function() {});
-});
+console.log("extension running!");
+// chrome.storage.sync.set({'extensionsFolderId': ''}); uncomment to RESET storage.
 
-// set up initial chrome storage values
-var toggleSitesActive = false;
-var toggleSitesList = 'example.com';
+let otherBookmarksID;
+// https://stackoverflow.com/questions/15329271/how-do-i-get-the-id-of-an-added-bookmarks-folder
+// might need callbacks for this. get root folder id?? is this even necessary
+// https://bugs.chromium.org/p/chromium/issues/detail?id=29190
+function onTree(bookmarks) {
 
-chrome.storage.sync.get([
-    'toggleSitesActive',
-    'toggleSitesList'
-], function(result) {
-    toggleSitesActive = result.toggleSitesActive;
-    toggleSitesList = result.toggleSitesList;
-});
-
-// on each site request, block if it's in toggleSitesList
-chrome.webRequest.onBeforeRequest.addListener(
-    function(details) {
-        // if the toggle is inactive, don't block anything
-        if (!toggleSitesActive) {
-            return { cancel: false };
-        }
-
-        // determine if the url is in toggleSitesList
-        var cancel = toggleSitesList.split(/\n/)
-            .some(site => {
-                var url = new URL(details.url);
-
-                return Boolean(url.hostname.indexOf(site) !== -1);
-            });
-
-        return { cancel: cancel };
-    },
-    {
-        urls: ["<all_urls>"]
-    },
-    [
-        "blocking"
-    ]
-);
-
-// any time a storage item is updated, update global variables
-chrome.storage.onChanged.addListener(function(changes, namespace) {
-    if (namespace === 'sync') {
-        if (changes.toggleSitesActive) {
-            toggleSitesActive = changes.toggleSitesActive.newValue;
-        }
-        if (changes.toggleSitesList) {
-            toggleSitesList = changes.toggleSitesList.newValue;
+    for (var i = 0; i < bookmarks[0].children.length; i++) { //can put return somewhere to optimize. other ways to optimize
+        if (bookmarks[0].children[i].title === "Other bookmarks") {
+            for (var j = 0; j < bookmarks[0].children[i].children.length; j++) {
+                if (!bookmarks[0].children[i].children[j].url) {
+                    let newFolder = (bookmarks[0].children[i].children[j].id); // finding the ID of already created Extensions folder
+                    console.log("folder id is " + newFolder + bookmarks[0].children[i].children[j].title);
+                    saveFolderId(newFolder);
+                }
+            }
         }
     }
-});
+    // to fix the async set/get thing -
+    // put the other code in a function, and run it from here.
+}
+
+// can't save bookmarks in root folders.
+// CHECK if bookmark folder exists, so as not to create it x2.
+
+function createBookmark(extensionsFolderId, tabs) {
+    console.log(typeof (extensionsFolderId)); // it's a str
+    chrome.bookmarks.create({
+        'parentId': extensionsFolderId, // changing this value to "2" solves the error? but 7916 doesn't. ???????
+        'title': tabs[0].title,        // Uncaught (in promise) Error: Can't find parent bookmark for id.
+        'url': tabs[0].url
+    });
+    console.log(tabs[0].title + 'bookmark created in ' + extensionsFolderId);
+}
+
+function startBookmarking(tabs) {
+// console.log(Object.keys(currentTab));
+//console.log(JSON.stringify(currentTab));
+    console.log("statr bookmarking!");
+
+    chrome.bookmarks.getTree(onTree);
+
+    chrome.storage.sync.get(['folderId'], function (result) { // this is running before the callback comes through.
+        console.log('Value currently is ' + result.folderId);     // might  create issues?
+
+        let test = result.folderId;
+        console.log('Test variable says folder is ' + test + 'here' + tabs);
+
+        if (test === undefined) {
+
+            chrome.storage.sync.get(['otherBookmarksID'], function () {
+                console.log('otherBookmark retrieved, equals  ' + otherBookmarksID);
+
+            });
+            chrome.bookmarks.create({
+                    'parentId': otherBookmarksID,
+                    'title': 'Extension bookmarks'
+                },
+                function (newFolder) {
+                    console.log("added folder: " + newFolder.title);
+                    createBookmark(newFolder.id, tabs);
+                    saveFolderId(newFolder.id);
+                });
+        } else {
+            chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+                console.log("ran query!");
+                // console.log(Object.keys(tabs[0]));
+                createBookmark(result.folderId, tabs);
+            });
+        }
+
+    });
+}
+
+
+function saveFolderId(extensionsFolderId) {
+    chrome.storage.sync.set({'folderId': extensionsFolderId}, function () {
+        console.log('Value is set to ' + extensionsFolderId);
+    });
+}
+
+// function getFolderId(tabs) {
+//   chrome.storage.sync.get(['folderId'], function(result) {
+//   console.log('Value currently is ' + result.folderId);
+//   createBookmark( result.folderId, tabs);
+//   console.log('tabs is '+tabs + ' at folderID' +result.folderId);
+//   });
+// }
+
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    console.log("Got message from popup script: ", request);
+    // let currentTab = askCurrentTab();
+    sendResponse('OK');
+    // EDIT - remove edit later. uncomment the onTree in start Bookmarking.
+    // use promises with .then
+    // chrome.bookmarks.getTree(onTree);
+    startBookmarking();
+})
