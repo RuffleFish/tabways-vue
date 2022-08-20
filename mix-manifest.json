@@ -3,8 +3,19 @@
     "/dist/js/popup.js": "/dist/js/popup.js",
     "/dist/js/dashboard.js": "/dist/js/dashboard.js",
     "/dist/css/popup.css": "/dist/css/popup.css",
+    "/dist/images/code.png": "/dist/images/code.png",
+    "/dist/images/coffee.png": "/dist/images/coffee.png",
+    "/dist/images/cube.png": "/dist/images/cube.png",
+    "/dist/images/diploma.png": "/dist/images/diploma.png",
+    "/dist/images/doc-48x48.png": "/dist/images/doc-48x48.png",
     "/dist/images/icon-128x128.png": "/dist/images/icon-128x128.png",
     "/dist/images/icon-16x16.png": "/dist/images/icon-16x16.png",
     "/dist/images/icon-48x48-off.png": "/dist/images/icon-48x48-off.png",
-    "/dist/images/icon-48x48.png": "/dist/images/icon-48x48.png"
+    "/dist/images/icon-48x48.png": "/dist/images/icon-48x48.png",
+    "/dist/images/laptop.png": "/dist/images/laptop.png",
+    "/dist/images/link.png": "/dist/images/link.png",
+    "/dist/images/tabways-128x128.png": "/dist/images/tabways-128x128.png",
+    "/dist/css/fonts/Gilroy-ExtraBold.otf": "/dist/css/fonts/Gilroy-ExtraBold.otf",
+    "/dist/css/fonts/Gilroy-Light.otf": "/dist/css/fonts/Gilroy-Light.otf",
+    "/dist/css/fonts/Titillium-Regular.otf": "/dist/css/fonts/Titillium-Regular.otf"
 }

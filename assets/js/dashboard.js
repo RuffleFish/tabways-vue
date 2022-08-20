@@ -72,22 +72,22 @@ function openSpace() { //also disable button after first click?
 // let div = document.createElement("div");
 // workDiv.append("The tabs you're on are:", p);
 
-chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, (tabs) => {
-
-    let div = document.createElement("div");
-    let p = document.createElement("p");
-    //console.log("openDiv is "+ openDiv);
-    openDiv.append("The tabs you're on are:", p);
-
-    openDiv.innerHTML += ('<ul>');
-    // document.write(`<h3>The tabs you're on are:</h3>`);
-    // document.write('<ul>');
-    for (let i = 0; i < tabs.length; i++) {
-        openDiv.innerHTML += (`<li><a href="${tabs[i].url}"> ${tabs[i].title} </a></li>`);
-
-    }
-    openDiv.innerHTML += ('</ul>');
-});
+// chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, (tabs) => {
+//
+//     let div = document.createElement("div");
+//     let p = document.createElement("p");
+//     //console.log("openDiv is "+ openDiv);
+//     openDiv.append("The tabs you're on are:", p);
+//
+//     openDiv.innerHTML += ('<ul>');
+//     // document.write(`<h3>The tabs you're on are:</h3>`);
+//     // document.write('<ul>');
+//     for (let i = 0; i < tabs.length; i++) {
+//         openDiv.innerHTML += (`<li><a href="${tabs[i].url}"> ${tabs[i].title} </a></li>`);
+//
+//     }
+//     openDiv.innerHTML += ('</ul>');
+// });
 
 // chrome.runtime.onMessage.addListener(
 //   function(request, sender, sendResponse) {

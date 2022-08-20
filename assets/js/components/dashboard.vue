@@ -1,37 +1,49 @@
 <template>
-  <div class="wrapper">
-    <h1>Dashboard Tabways</h1>
-    <div id="workspaces" ref="workspaces"></div>
-    <h2>Workspaces</h2>
-    <a id="workspace" href="#" style="border: 2px solid green; padding: 2px;" @click="openSpace()">Work</a>
-    <a id="close-all" href="#" style="border: 2px solid orange; padding: 2px;" @click="closeAllTabs()">x - Close all</a>
+  <div class="container-wrapper">
+    <div class="sidebar">
+      <div id="workspaces" ref="workspaces"></div>
+<!--  <h2>Workspaces</h2>-->
+      <ButtonSpace @clicked="openSpace()" text="Work" iconSpace="../../images/laptop.png"/>
+      <ButtonSpace @clicked="openSpace()" text="Music" iconSpace="../../images/cube.png"/>
+      <ButtonSpace @clicked="openSpace()" text="Rest" iconSpace="../../images/coffee.png"/>
+      <Button @clicked="closeAllTabs()" text="close all tabs" color="red"/>
+  <!--    <a id="workspace" href="#" ">Work</a>-->
+  <!--    <a id="close-all" href="#" @click="closeAllTabs()">x - Close all</a>-->
+    </div>
     <div class="dashboard"> <!-- when do I use sections? -->
-      <h2>Hello there!</h2>
-      <p>If you let it, this can be a new tab page.</p>
+      <Header title="Tabways dashboard" />
+      <Button text="Add Collection" color="green" />
       <h2>Open tabs</h2>
       <div id="open-tabs" ref="opentabs"> </div>
+      <Collection :collection="collection" :icon="icon" />
     </div>
-    <Collection :collection="collection" />
   </div>
 </template>
 
 <script>
 import Collection from './Collection'
+import Button from './Button'
+import Header from './Header'
+import ButtonSpace from './ButtonSpace'
 
 export default {
   name: 'Dashboard',
   components: {
-    Collection
+    Collection,
+    Button,
+    Header,
+    ButtonSpace
   },
   data() {
     return {
-         collection: []
+         collection: [],
       // active: true,
       // list: "example.com",
       // icons: {
       //   active: 'images/icon-48x48.png',
       //   inactive: 'images/icon-48x48-off.png'
       // }
+        icon: '../../images/doc-48x48.png'
     }
   },
   created() {
@@ -69,15 +81,16 @@ export default {
       this.currentTabs();
     },
     findAndOpen(bookmarks) {
+      console.log('this is the bookmarks object'+bookmarks);
       for (var i = 0; i < bookmarks[0].children.length; i++) {
-        if (bookmarks[0].children[i].title === "Other bookmarks") {
-          for (var j = 0; j < bookmarks[0].children[i].children.length; j++) {
-            if (!bookmarks[0].children[i].children[j].url) {
-              let newFolder = (bookmarks[0].children[i].children[j]); //find extension folder
+        if (bookmarks[0].children[i].title === "Other bookmarks") { // looking for "Other bookmarks" folder (through direct children of main Bookmarks folder)
+          for (var j = 0; j < bookmarks[0].children[i].children.length; j++) { // look through direct children of "Other bookmarks"
+            if (!bookmarks[0].children[i].children[j].url) {          // if there is no url (it's a folder), then we've found the extension folder.
+              let newFolder = (bookmarks[0].children[i].children[j]); // save Extension folder id.
               console.log("folder is " + newFolder);
               for (var k = 0; k < bookmarks[0].children[i].children[j].children.length; k++) { //loop through bookmarks in Extension folder.
                 console.log("Opening bookmark " + k + "is" + bookmarks[0].children[i].children[j].children[k].title);
-                chrome.tabs.create({'url': bookmarks[0].children[i].children[j].children[k].url}, function (tab) {
+                chrome.tabs.create({'url': bookmarks[0].children[i].children[j].children[k].url}, function (tab) { // open each of the bookmarks in the folder.
                   // Tab opened.
                 });
               }
@@ -93,9 +106,9 @@ export default {
       console.log('querying current tabs');
       chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function (tabs)  {
         vm.collection = tabs;
-        console.log(collection[0]);
-        console.log(collection);
-        console.log(collection[0].title);
+        console.log(vm.collection[0]);
+        console.log(vm.collection);
+        console.log(vm.collection[0].title);
         saveCollection(tabs);
         /*
         let div = document.createElement("div");
@@ -112,7 +125,6 @@ export default {
 
          */
       });
-
       function saveCollection(tabs) {
         vm.collection = tabs;
         console.log(vm.collection + "save Colleciton funcion ran")
@@ -121,3 +133,25 @@ export default {
   }
 }
 </script>
+
+<style>
+body {
+  background-color: #f2f2f2;
+}
+btn {
+  font-family: 'Titillium Web', Arial, Helvetica, sans-serif;
+  background-color: green;
+  padding: 1rem 2rem 1rem 2rem;
+}
+div.container-wrapper {
+  display:flex;
+}
+div.sidebar {
+  flex: 1 1 20%;
+  min-width: 120px;
+}
+div.dashboard {
+  flex: 1 1 80%;
+  margin-left: 2rem;
+}
+</style>
