@@ -240,9 +240,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   methods: {
     openSpace: function openSpace() {
       //also disable button after first click?
-      //this.style = "background-color:green;" what?
-      console.log("opening space"); // https://dev.to/midhunz/how-to-create-a-simple-chrome-extension-ijk
-
+      // https://dev.to/midhunz/how-to-create-a-simple-chrome-extension-ijk
       chrome.tabs.create({}, function (newTab) {
         var querying = chrome.tabs.query({}, function (tabs) {
           var _iterator = _createForOfIteratorHelper(tabs),
@@ -297,19 +295,25 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           for (var j = 0; j < bookmarks[0].children[i].children.length; j++) {
             // look through direct children of "Other bookmarks"
             if (!bookmarks[0].children[i].children[j].url) {
-              // if there is no url (it's a folder), then we've found the extension folder.
-              var newFolder = bookmarks[0].children[i].children[j]; // save Extension folder id.
+              // if there is no url (it's a folder), then we've found a folder.
+              if (bookmarks[0].children[i].children[j].title === "Tabways") {
+                // check if it's the extension folder.
+                var newFolder = bookmarks[0].children[i].children[j]; // save Extension folder id.
 
-              console.log("folder is " + newFolder);
+                console.log("folder is " + newFolder);
 
-              for (var k = 0; k < bookmarks[0].children[i].children[j].children.length; k++) {
-                //loop through bookmarks in Extension folder.
-                console.log("Opening bookmark " + k + "is" + bookmarks[0].children[i].children[j].children[k].title);
-                chrome.tabs.create({
-                  'url': bookmarks[0].children[i].children[j].children[k].url
-                }, function (tab) {// open each of the bookmarks in the folder.
-                  // Tab opened.
-                });
+                for (var k = 0; k < bookmarks[0].children[i].children[j].children.length; k++) {
+                  //loop through bookmarks in Extension folder.
+                  console.log("Opening bookmark " + k + "is" + bookmarks[0].children[i].children[j].children[k].title);
+                  chrome.tabs.create({
+                    'url': bookmarks[0].children[i].children[j].children[k].url
+                  }, function (tab) {// open each of the bookmarks in the folder.
+                    // Tab opened.
+                  });
+                }
+              } else {
+                // create Tabways folder!
+                console.log("The collection or space doesn't exist.");
               }
             }
           }
@@ -437,7 +441,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\nbody {\r\n  background-color: #f2f2f2;\n}\nbtn {\r\n  font-family: 'Titillium Web', Arial, Helvetica, sans-serif;\r\n  background-color: green;\r\n  padding: 1rem 2rem 1rem 2rem;\n}\ndiv.container-wrapper {\r\n  display:flex;\n}\ndiv.sidebar {\r\n  flex: 1 1 20%;\r\n  min-width: 120px;\n}\ndiv.dashboard {\r\n  flex: 1 1 80%;\r\n  margin-left: 2rem;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\nbody {\r\n  background-color: #f2f2f2;\n}\nbtn {\r\n  font-family: 'Titillium Web', Arial, Helvetica, sans-serif;\r\n  background-color: green;\r\n  padding: 1rem 2rem 1rem 2rem;\n}\ndiv.container-wrapper {\r\n  display: flex;\n}\ndiv.sidebar {\r\n  flex: 1 1 20%;\r\n  min-width: 120px;\n}\ndiv.dashboard {\r\n  flex: 1 1 80%;\r\n  margin-left: 2rem;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

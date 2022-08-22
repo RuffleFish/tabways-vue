@@ -6,6 +6,12 @@ const app = new Vue({
     render: createElement => createElement(Popup)
 });
 
-chrome.runtime.sendMessage({message: "hi"}, (response) => {
+let spaceName = 'work';
+let select = document.getElementById('space');
+let spaceValue = select.options[select.selectedIndex].value;
+console.log(spaceValue); // en
+let collectionValue = "Open tabs";
+
+chrome.runtime.sendMessage({message: {space: spaceValue, collection: collectionValue}}, (response) => {
   console.log(response);
 });

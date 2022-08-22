@@ -2,20 +2,25 @@
     <div class="wrapper">
 
       <h1>Tabways</h1>
-      <p>Select a space. </p>
+      <p>Your tab is saved here:</p>
       <div class='field'>
-        <label for='select1'>Select</label>
-        <select id='select1'>
-          <option value=''>Select</option>
-          <option value='Select One'>Select One</option>
-          <option value='Select Two'>Select Two</option>
-          <option value='Select Three'>Select Three</option>
+        <label for='select1'></label>
+        <select id='space'>
+          <option value='work' selected>Work space</option>
+          <option value='fun'>Fun space</option>
+          <option value='music'>Music space</option>
+        </select>
+        <select id='space'>
+          <option value='goal1'>Expert Cook goal</option>
+          <option value='goal2'>Everyday Musician goal</option>
+          <option value='goal3' selected>No Distractions goal</option>
         </select>
       </div>
 
-      <div class='fieldset'>
-        <button @click="onClick()" type='submit'>Submit Form</button>
-      </div></div>
+<!--      <div class='fieldset'> this button is linked to Vue scripts  -->
+<!--        <button @click="onClick()" type='submit'>Submit Form</button>-->
+<!--      </div>-->
+    </div>
 </template>
 <script>
 export default {
@@ -37,3 +42,10 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+div.field {
+  display:flex;
+  flex-direction:row;
+}
+</style>
