@@ -82,13 +82,15 @@ function checkIfExists(parent, newitemtitle) {
 }
 
 function createBookmark(extensionsFolderId, tabs) {
-  canContinue = true;
+  canContinue = true; //reset variable
+
   console.log(_typeof(extensionsFolderId)); // it's a str
   //console.log('space name is' + space);
   //console.log(tabways.children[1]);
   //console.log(tabways.children.length);
 
-  canContinue = checkIfExists(tabways, space);
+  canContinue = checkIfExists(tabways, space); // check if folder (space) already exists
+
   console.log("we can continue" + canContinue); // if space folder doesn't exist, create it and then bookmark the link.
 
   if (canContinue === true) {

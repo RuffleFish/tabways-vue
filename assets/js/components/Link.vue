@@ -34,7 +34,7 @@ div.wrapper {
   display: flex;
   flex-direction: row;
   background-color: #fefefe;
-  padding-left:  1rem;
+  /*padding-left:  1rem;*/
   margin: 0.5rem 0 0.5rem 0;
 }
 div.link-wrapper {

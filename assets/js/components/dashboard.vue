@@ -10,21 +10,24 @@
       <!--    <a id="workspace" href="#" ">Work</a>-->
       <!--    <a id="close-all" href="#" @click="closeAllTabs()">x - Close all</a>-->
     </div>
-    <div class="dashboard"> <!-- when do I use sections? -->
+    <div ref="container" class="dashboard"> <!-- when do I use sections? -->
       <Header title="Tabways dashboard"/>
-      <Button text="Add Collection" color="green"/>
-      <h2>Open tabs</h2>
-      <div id="open-tabs" ref="opentabs"></div>
+      <AddCollection @clicked="addCollection()" />
+<!--      <div id="open-tabs" ref="opentabs"></div>-->
       <Collection :collection="collection" :icon="icon"/>
     </div>
+    <RewardSpace/>
   </div>
 </template>
 
 <script>
+import Vue from 'vue' // added so addCollection would work well.
 import Collection from './Collection'
 import Button from './Button'
 import Header from './Header'
 import ButtonSpace from './ButtonSpace'
+import RewardSpace from './RewardSpace'
+import AddCollection from './AddCollection'
 
 export default {
   name: 'Dashboard',
@@ -32,7 +35,9 @@ export default {
     Collection,
     Button,
     Header,
-    ButtonSpace
+    ButtonSpace,
+    RewardSpace,
+    AddCollection
   },
   data() {
     return {
@@ -43,32 +48,47 @@ export default {
       //   active: 'images/icon-48x48.png',
       //   inactive: 'images/icon-48x48-off.png'
       // }
-      icon: '../../images/doc-48x48.png'
+      icon: '../../images/doc-48x48.png',
+      spaceName: '',
+      collectionName: ''
     }
   },
   created() {
     this.currentTabs();
+    this.getSpaceAndCollection();
   },
   mounted() {
 
   },
   methods: {
+    addCollection() {
+      // https://css-tricks.com/creating-vue-js-component-instances-programmatically/
+      console.log("collection added");
+      var ComponentClass = Vue.extend(Collection);
+      var instance = new ComponentClass()({ // create a new component class and pass data into it
+        propsData: { collectionName: 'primary' }
+      });
+      instance.$slots.default = [ 'Click me!' ] //pass a string to the component
+      instance.$mount(); // pass nothing
+      this.$refs.container.appendChild(instance.$el);
+    },
     openSpace() {
       //also disable button after first click?
       // https://dev.to/midhunz/how-to-create-a-simple-chrome-extension-ijk
+      this.currentTabs();
       chrome.tabs.create({}, function (newTab) {
         let querying = chrome.tabs.query({}, function (tabs) {
           for (let tab of tabs) {
             if (tab.id !== newTab.id) chrome.tabs.remove(tab.id);
           }
+          chrome.tabs.update(newTab.id, {active: true}) // make new tab active again. make sure this works well with callbacks.
         });
       });
       chrome.bookmarks.getTree(this.findAndOpen);
-      chrome.tabs.update(newTab.id, {active: true}) // make new tab active again. make sure this works well with callbacks.
-      this.currentTabs();
     },
     closeAllTabs() {
       // save? or something.
+      this.currentTabs();
       chrome.tabs.create({}, function (newTab) {
         let querying = chrome.tabs.query({}, function (tabs) {
           for (let tab of tabs) {
@@ -76,9 +96,11 @@ export default {
           }
         });
       });
-      this.currentTabs();
     },
     findAndOpen(bookmarks) {
+      // save current ones in currently open space
+      // close current ones
+      // loop through and open bookmarks in button-indicated space
       console.log('this is the bookmarks object' + bookmarks);
       for (var i = 0; i < bookmarks[0].children.length; i++) {
         if (bookmarks[0].children[i].title === "Other bookmarks") { // looking for "Other bookmarks" folder (through direct children of main Bookmarks folder)
@@ -102,11 +124,11 @@ export default {
           }
         }
       }
-      this.currentTabs();
+      // this.currentTabs();
       //
     },
     currentTabs() {
-      let vm = this;
+      let vm = this; // pass "this" to a variable. Otherwise wouldn't be able to access Vue "this" inside of query function.
       console.log('querying current tabs');
       chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function (tabs) {
         vm.collection = tabs;
@@ -130,10 +152,13 @@ export default {
          */
       });
 
-      function saveCollection(tabs) {
-        vm.collection = tabs;
-        console.log(vm.collection + "save Colleciton funcion ran")
+      function saveCollection() {
+        // vm.collection = tabs;
+        console.log(vm.collection+ "save collection")
       }
+    },
+    getSpaceAndCollection() {
+
     }
   }
 }
@@ -162,5 +187,10 @@ div.sidebar {
 div.dashboard {
   flex: 1 1 80%;
   margin-left: 2rem;
+}
+div.addCollection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 </style>

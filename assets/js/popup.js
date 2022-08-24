@@ -8,9 +8,9 @@ const app = new Vue({
 
 let spaceName = 'work';
 let select = document.getElementById('space');
-let spaceValue = select.options[select.selectedIndex].value;
+let spaceValue = select.options[select.selectedIndex].value; //get the current space (or goal, down the line) from the dropdown
 console.log(spaceValue); // en
-let collectionValue = "Open tabs";
+let collectionValue = "Open tabs"; // hardcoded for now. get the current collection value.
 
 chrome.runtime.sendMessage({message: {space: spaceValue, collection: collectionValue}}, (response) => {
   console.log(response);

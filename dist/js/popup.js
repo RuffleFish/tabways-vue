@@ -12815,10 +12815,12 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1__["default"]({
 });
 var spaceName = 'work';
 var select = document.getElementById('space');
-var spaceValue = select.options[select.selectedIndex].value;
+var spaceValue = select.options[select.selectedIndex].value; //get the current space (or goal, down the line) from the dropdown
+
 console.log(spaceValue); // en
 
-var collectionValue = "Open tabs";
+var collectionValue = "Open tabs"; // hardcoded for now. get the current collection value.
+
 chrome.runtime.sendMessage({
   message: {
     space: spaceValue,
