@@ -12824,7 +12824,8 @@ var collectionValue = "Open tabs"; // hardcoded for now. get the current collect
 chrome.runtime.sendMessage({
   message: {
     space: spaceValue,
-    collection: collectionValue
+    collection: collectionValue,
+    origin: 'popup'
   }
 }, function (response) {
   console.log(response);

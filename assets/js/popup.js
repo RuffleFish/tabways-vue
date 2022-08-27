@@ -12,6 +12,6 @@ let spaceValue = select.options[select.selectedIndex].value; //get the current s
 console.log(spaceValue); // en
 let collectionValue = "Open tabs"; // hardcoded for now. get the current collection value.
 
-chrome.runtime.sendMessage({message: {space: spaceValue, collection: collectionValue}}, (response) => {
+chrome.runtime.sendMessage({message: {space: spaceValue, collection: collectionValue, origin: 'popup'}}, (response) => {
   console.log(response);
 });

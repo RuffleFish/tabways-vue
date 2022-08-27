@@ -39,6 +39,7 @@ div.wrapper {
 }
 div.link-wrapper {
   margin-left: 0.5rem;
+  max-width: 100%;
 }
 div.icon-wrapper {
   width:32px;

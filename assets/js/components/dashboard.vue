@@ -10,11 +10,13 @@
       <!--    <a id="workspace" href="#" ">Work</a>-->
       <!--    <a id="close-all" href="#" @click="closeAllTabs()">x - Close all</a>-->
     </div>
-    <div ref="container" class="dashboard"> <!-- when do I use sections? -->
+    <div class="dashboard"> <!-- when do I use sections? -->
       <Header title="Tabways dashboard"/>
-      <AddCollection @clicked="addCollection()" />
+      <AddCollection @submitted="addCollection($event)" />
 <!--      <div id="open-tabs" ref="opentabs"></div>-->
-      <Collection :collection="collection" :icon="icon"/>
+      <div ref="container">
+        <Collection :collection="collection" :icon="icon" collection-title="Open tabs"/>
+      </div>
     </div>
     <RewardSpace/>
   </div>
@@ -50,8 +52,9 @@ export default {
       // }
       icon: '../../images/doc-48x48.png',
       spaceName: '',
-      collectionName: ''
-    }
+      collectionName: '',
+      collectionTitle: String
+    };
   },
   created() {
     this.currentTabs();
@@ -61,16 +64,43 @@ export default {
 
   },
   methods: {
-    addCollection() {
+    addCollection(name) {
       // https://css-tricks.com/creating-vue-js-component-instances-programmatically/
-      console.log("collection added");
-      var ComponentClass = Vue.extend(Collection);
-      var instance = new ComponentClass()({ // create a new component class and pass data into it
-        propsData: { collectionName: 'primary' }
+      console.log("collection added"+name);
+      let ComponentClass = Vue.extend(Collection);
+
+      // ALTERNATIVE METHOD - pass a data object instead of propsData.
+      // const dataObj = {
+      //   data: name,
+      //   collection: {title: "none", url:"www.google.com"}
+      // }
+
+      // let instance = new ComponentClass({
+      //   data() {
+      //     return dataObj;
+      //   }
+      // });
+
+      let instance = new ComponentClass ({
+        propsData: {
+          collectionTitle: name,
+          collection: {link: {title:'none', url: 'www.bullshit.com', favIconUrl: '../../images/doc-48x48.png'}}
+        }
       });
-      instance.$slots.default = [ 'Click me!' ] //pass a string to the component
+
+      // instance.$slots.default = [ 'Click me!' ]; //pass a string to the component
       instance.$mount(); // pass nothing
       this.$refs.container.appendChild(instance.$el);
+
+      // console.log(dataObj.data);
+      this.callBackground(name);
+    },
+    callBackground(name) {
+      console.log("calling background");
+      chrome.runtime.sendMessage({message: {space: 'work', collection: name, origin: 'background'}}, (response) => {
+        console.log(response);
+      });
+
     },
     openSpace() {
       //also disable button after first click?
@@ -187,6 +217,7 @@ div.sidebar {
 div.dashboard {
   flex: 1 1 80%;
   margin-left: 2rem;
+  max-width: 60vw;
 }
 div.addCollection {
   display: flex;

@@ -1,8 +1,8 @@
 <template>
-  <form>
+  <form @submit.prevent="onSubmit()" > <!-- v-on:submit.prevent=-->
 <!--    <label>Add Collection</label>-->
     <input type="text" id="collectionName" v-model="collectionName" name="collectionName">
-    <button @click="onClicked()" type="submit"> + Add Collection </button>
+    <button class="btn" type="submit"> + Add Collection </button>
   </form>
 </template>
 
@@ -12,7 +12,7 @@ import Button from './Button'
 export default {
   name: 'AddCollection',
   components: {
-    Button
+    Button,
   },
   data() {
     return {
@@ -21,14 +21,17 @@ export default {
     }
   },
   methods: {
-    onClicked(e) {
-      e.preventDefault();
-      this.$emit("clicked");
-      const data = {
-        title: '',
-      }
-    }
-  }
+    onSubmit() {
+      console.log("clicked"+this.collectionName)
+      this.$emit("submitted", this.collectionName)
+      // const data = {
+      //   title: '',
+      //   collectionName: ''
+      // }
+      // console.log(data);
+      this.collectionName = '' // clear the field
+    },
+  },
 }
 </script>
 

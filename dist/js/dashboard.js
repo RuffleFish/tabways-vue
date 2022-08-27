@@ -34,12 +34,15 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    onClicked: function onClicked(e) {
-      e.preventDefault();
-      this.$emit("clicked");
-      var data = {
-        title: ''
-      };
+    onSubmit: function onSubmit() {
+      console.log("clicked" + this.collectionName);
+      this.$emit("submitted", this.collectionName); // const data = {
+      //   title: '',
+      //   collectionName: ''
+      // }
+      // console.log(data);
+
+      this.collectionName = ''; // clear the field
     }
   }
 });
@@ -141,6 +144,7 @@ __webpack_require__.r(__webpack_exports__);
     Link: _Link__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   props: {
+    collectionTitle: String,
     collection: Array,
     icon: String
   }
@@ -236,6 +240,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "RewardSpace",
@@ -292,6 +297,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
  // added so addCollection would work well.
 
 
@@ -321,7 +328,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       // }
       icon: '../../images/doc-48x48.png',
       spaceName: '',
-      collectionName: ''
+      collectionName: '',
+      collectionTitle: String
     };
   },
   created: function created() {
@@ -330,21 +338,50 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   },
   mounted: function mounted() {},
   methods: {
-    addCollection: function addCollection() {
+    addCollection: function addCollection(name) {
       // https://css-tricks.com/creating-vue-js-component-instances-programmatically/
-      console.log("collection added");
-      var ComponentClass = vue__WEBPACK_IMPORTED_MODULE_6__["default"].extend(_Collection__WEBPACK_IMPORTED_MODULE_0__["default"]);
-      var instance = new ComponentClass()({
-        // create a new component class and pass data into it
+      console.log("collection added" + name);
+      var ComponentClass = vue__WEBPACK_IMPORTED_MODULE_6__["default"].extend(_Collection__WEBPACK_IMPORTED_MODULE_0__["default"]); // ALTERNATIVE METHOD - pass a data object instead of propsData.
+      // const dataObj = {
+      //   data: name,
+      //   collection: {title: "none", url:"www.google.com"}
+      // }
+      // let instance = new ComponentClass({
+      //   data() {
+      //     return dataObj;
+      //   }
+      // });
+
+      var instance = new ComponentClass({
         propsData: {
-          collectionName: 'primary'
+          collectionTitle: name,
+          collection: {
+            link: {
+              title: 'none',
+              url: 'www.bullshit.com',
+              favIconUrl: '../../images/doc-48x48.png'
+            }
+          }
         }
-      });
-      instance.$slots["default"] = ['Click me!']; //pass a string to the component
+      }); // instance.$slots.default = [ 'Click me!' ]; //pass a string to the component
 
       instance.$mount(); // pass nothing
 
-      this.$refs.container.appendChild(instance.$el);
+      this.$refs.container.appendChild(instance.$el); // console.log(dataObj.data);
+
+      this.callBackground(name);
+    },
+    callBackground: function callBackground(name) {
+      console.log("calling background");
+      chrome.runtime.sendMessage({
+        message: {
+          space: 'work',
+          collection: name,
+          origin: 'background'
+        }
+      }, function (response) {
+        console.log(response);
+      });
     },
     openSpace: function openSpace() {
       //also disable button after first click?
@@ -558,7 +595,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ndiv.box-wrapper[data-v-7a28287f] {\r\n  background-color: #fefefe;\r\n  padding: 1rem 1rem 1rem 1rem;\r\n  border-radius: 3%;\r\n  min-width: 420px;\n}\nh2[data-v-7a28287f] {\r\n  margin-top:0rem;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ndiv.box-wrapper[data-v-7a28287f] {\r\n  background-color: #fefefe;\r\n  padding: 1rem 1rem 1rem 1rem;\r\n  border-radius: 3%;\r\n  min-width: 420px;\r\n  margin:  1.5rem 0rem 1.5rem 0rem;\n}\nh2[data-v-7a28287f] {\r\n  margin-top:0rem;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -582,7 +619,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ndiv.wrapper[data-v-9e2472ca] {\r\n  display: flex;\r\n  flex-direction: row;\r\n  background-color: #fefefe;\r\n  /*padding-left:  1rem;*/\r\n  margin: 0.5rem 0 0.5rem 0;\n}\ndiv.link-wrapper[data-v-9e2472ca] {\r\n  margin-left: 0.5rem;\n}\ndiv.icon-wrapper[data-v-9e2472ca] {\r\n  width:32px;\r\n  margin: 0.2rem 0rem 0.2rem 0rem;\n}\nimg[data-v-9e2472ca] {\r\n  max-width:32px;\n}\nh4[data-v-9e2472ca] {\r\n  margin: 0.2rem 0rem 0.2rem 0rem;\n}\np[data-v-9e2472ca] {\r\n  margin: 0.2rem 0rem 0.2rem 0rem;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ndiv.wrapper[data-v-9e2472ca] {\r\n  display: flex;\r\n  flex-direction: row;\r\n  background-color: #fefefe;\r\n  /*padding-left:  1rem;*/\r\n  margin: 0.5rem 0 0.5rem 0;\n}\ndiv.link-wrapper[data-v-9e2472ca] {\r\n  margin-left: 0.5rem;\r\n  max-width: 100%;\n}\ndiv.icon-wrapper[data-v-9e2472ca] {\r\n  width:32px;\r\n  margin: 0.2rem 0rem 0.2rem 0rem;\n}\nimg[data-v-9e2472ca] {\r\n  max-width:32px;\n}\nh4[data-v-9e2472ca] {\r\n  margin: 0.2rem 0rem 0.2rem 0rem;\n}\np[data-v-9e2472ca] {\r\n  margin: 0.2rem 0rem 0.2rem 0rem;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -606,7 +643,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\nimg[data-v-70d3a906] {\r\n  max-width: 550px;\n}\ndiv.rewardSpace[data-v-70d3a906] {\r\n  display: flex;\r\n  flex-direction:column;\r\n  justify-content: flex-start;\r\n  align-items: center;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\nimg[data-v-70d3a906] {\r\n  max-width: 550px;\r\n  /*max-width:100%;*/\n}\ndiv.rewardSpace[data-v-70d3a906] {\r\n  display: flex;\r\n  flex-direction:column;\r\n  justify-content: flex-start;\r\n  align-items: center;\n}\r\n/*div.imgSpace {*/\r\n/*  min-width: 600px;*/\r\n/*  min-height: 400px;*/\r\n/*  width:100%;*/\r\n/*  background-image: url('../../images/reward-space-mockup-r.png');*/\r\n/*  background-repeat: no-repeat;*/\r\n/*  background-size: contain;*/\r\n/*}*/\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -630,7 +667,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\nbody {\r\n  background-color: #f2f2f2;\n}\nbtn {\r\n  font-family: 'Titillium Web', Arial, Helvetica, sans-serif;\r\n  background-color: green;\r\n  padding: 1rem 2rem 1rem 2rem;\n}\ndiv.container-wrapper {\r\n  display: flex;\n}\ndiv.sidebar {\r\n  flex: 1 1 20%;\r\n  min-width: 120px;\n}\ndiv.dashboard {\r\n  flex: 1 1 80%;\r\n  margin-left: 2rem;\n}\ndiv.addCollection {\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\nbody {\r\n  background-color: #f2f2f2;\n}\nbtn {\r\n  font-family: 'Titillium Web', Arial, Helvetica, sans-serif;\r\n  background-color: green;\r\n  padding: 1rem 2rem 1rem 2rem;\n}\ndiv.container-wrapper {\r\n  display: flex;\n}\ndiv.sidebar {\r\n  flex: 1 1 20%;\r\n  min-width: 120px;\n}\ndiv.dashboard {\r\n  flex: 1 1 80%;\r\n  margin-left: 2rem;\r\n  max-width: 60vw;\n}\ndiv.addCollection {\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1909,41 +1946,43 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("form", [
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.collectionName,
-          expression: "collectionName"
-        }
-      ],
-      attrs: { type: "text", id: "collectionName", name: "collectionName" },
-      domProps: { value: _vm.collectionName },
+  return _c(
+    "form",
+    {
       on: {
-        input: function($event) {
-          if ($event.target.composing) {
-            return
-          }
-          _vm.collectionName = $event.target.value
+        submit: function($event) {
+          $event.preventDefault()
+          return _vm.onSubmit()
         }
       }
-    }),
-    _vm._v(" "),
-    _c(
-      "button",
-      {
-        attrs: { type: "submit" },
+    },
+    [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.collectionName,
+            expression: "collectionName"
+          }
+        ],
+        attrs: { type: "text", id: "collectionName", name: "collectionName" },
+        domProps: { value: _vm.collectionName },
         on: {
-          click: function($event) {
-            return _vm.onClicked()
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.collectionName = $event.target.value
           }
         }
-      },
-      [_vm._v(" + Add Collection ")]
-    )
-  ])
+      }),
+      _vm._v(" "),
+      _c("button", { staticClass: "btn", attrs: { type: "submit" } }, [
+        _vm._v(" + Add Collection ")
+      ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -2051,7 +2090,7 @@ var render = function() {
         "div",
         { staticClass: "box-wrapper" },
         [
-          _c("h2", [_vm._v("Open tabs")]),
+          _c("h2", [_vm._v(_vm._s(_vm.collectionTitle))]),
           _vm._v(" "),
           _vm._l(_vm.collection, function(link) {
             return _c(
@@ -2251,21 +2290,32 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { ref: "container", staticClass: "dashboard" },
+        { staticClass: "dashboard" },
         [
           _c("Header", { attrs: { title: "Tabways dashboard" } }),
           _vm._v(" "),
           _c("AddCollection", {
             on: {
-              clicked: function($event) {
-                return _vm.addCollection()
+              submitted: function($event) {
+                return _vm.addCollection($event)
               }
             }
           }),
           _vm._v(" "),
-          _c("Collection", {
-            attrs: { collection: _vm.collection, icon: _vm.icon }
-          })
+          _c(
+            "div",
+            { ref: "container" },
+            [
+              _c("Collection", {
+                attrs: {
+                  collection: _vm.collection,
+                  icon: _vm.icon,
+                  "collection-title": "Open tabs"
+                }
+              })
+            ],
+            1
+          )
         ],
         1
       ),

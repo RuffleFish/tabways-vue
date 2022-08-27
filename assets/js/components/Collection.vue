@@ -1,6 +1,6 @@
 <template>
   <div class="box-wrapper" v-if="collection">
-    <h2>Open tabs</h2>
+    <h2>{{collectionTitle}}</h2>
     <div :key="link.id" v-for="link in collection">
     <Link :link="link" :collection="collection" :icon="icon" />
     </div>
@@ -19,6 +19,7 @@ export default {
     Link
   },
   props: {
+    collectionTitle: String,
     collection: Array,
     icon: String
   },
@@ -31,6 +32,7 @@ div.box-wrapper {
   padding: 1rem 1rem 1rem 1rem;
   border-radius: 3%;
   min-width: 420px;
+  margin:  1.5rem 0rem 1.5rem 0rem;
 }
 h2 {
   margin-top:0rem;
